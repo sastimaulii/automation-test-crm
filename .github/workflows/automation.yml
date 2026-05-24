@@ -1,0 +1,25 @@
+name: Automation Test CRM
+
+on:
+  workflow_dispatch:
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup Java
+        uses: actions/setup-java@v3
+        with:
+          distribution: temurin
+          java-version: 17
+
+      - name: Run API Test
+        run: ./gradlew apiTest
+
+      - name: Run Web Test
+        run: ./gradlew webTest
