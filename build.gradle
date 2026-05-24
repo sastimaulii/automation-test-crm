@@ -7,23 +7,54 @@ repositories {
 }
 
 dependencies {
+    // Cucumber
     testImplementation 'io.cucumber:cucumber-java:7.14.0'
     testImplementation 'io.cucumber:cucumber-junit:7.14.0'
+
+    // Selenium (Web UI)
     testImplementation 'org.seleniumhq.selenium:selenium-java:4.18.1'
+
+    // API Testing
     testImplementation 'io.rest-assured:rest-assured:5.3.0'
+
+    // JUnit 4
     testImplementation 'junit:junit:4.13.2'
 }
 
-test {
+tasks.withType(Test) {
     useJUnit()
+
+    testClassesDirs = sourceSets.test.output.classesDirs
+    classpath = sourceSets.test.runtimeClasspath
 }
 
-task apiTest(type: Test) {
-    useJUnit()
-    systemProperty "cucumber.filter.tags", "@api"
-}
-
+//////////////////////////////////////////////////////
+// ✅ WEB TEST (CUCUMBER WEB)
+//////////////////////////////////////////////////////
 task webTest(type: Test) {
     useJUnit()
+
+    // penting supaya gradle tau class test
+    testClassesDirs = sourceSets.test.output.classesDirs
+    classpath = sourceSets.test.runtimeClasspath
+
+    // runner yang dijalankan
+    include '**/WebTestRunner.class'
+
+    // filter tag cucumber
     systemProperty "cucumber.filter.tags", "@web"
+}
+
+//////////////////////////////////////////////////////
+// ✅ API TEST (CUCUMBER API)
+//////////////////////////////////////////////////////
+task apiTest(type: Test) {
+    useJUnit()
+
+    testClassesDirs = sourceSets.test.output.classesDirs
+    classpath = sourceSets.test.runtimeClasspath
+
+    include '**/ApiTestRunner.class'
+
+    systemProperty "cucumber.filter.tags", "@api"
 }
